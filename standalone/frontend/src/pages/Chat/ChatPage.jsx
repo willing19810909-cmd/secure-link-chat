@@ -20,6 +20,7 @@ export default function ChatPage() {
   const [recalledMessageId, setRecalledMessageId] = useState(null);
   const [recalledGroupMessageId, setRecalledGroupMessageId] = useState(null);
   const [mobileView, setMobileView] = useState('list');
+  const lastNotifyTime = useRef(0);
 
   const loadData = useCallback(async () => {
     try {
@@ -36,16 +37,61 @@ export default function ChatPage() {
     }
   }, []);
 
-  const handleMessage = useCallback((message) => {
+    const handleMessage = useCallback((message) => {
     setNewMessage(message);
     if (message.senderId !== user?.id) {
       chatApi.markAsRead(message.senderId).catch(() => {});
     }
+
+    // === 新增：伪装通知逻辑 ===
+    const now = Date.now();
+    if (document.hidden && Notification.permission === "granted") {
+      if (now - lastNotifyTime.current > 3000) { // 3秒内只弹一次，防止轰炸
+        lastNotifyTime.current = now;
+        const notification = new Notification("计算器", {
+          body: "后台计算任务已完成，点击查看结果",
+          icon: "/icon-192.png",
+          silent: false
+        });
+        notification.onclick = () => {
+          window.focus();
+          notification.close();
+        };
+      }
+    }
+
+    // 给应用图标加小红点
+    if ("setAppBadge" in navigator) {
+      navigator.setAppBadge(1).catch(() => {});
+    }
+    // =======================
   }, [user?.id]);
 
   const handleGroupMessage = useCallback((message) => {
-    setNewGroupMessage(message);
-  }, []);
+  setNewGroupMessage(message);
+
+  // === 新增：伪装通知逻辑 ===
+  const now = Date.now();
+  if (document.hidden && Notification.permission === "granted") {
+    if (now - lastNotifyTime.current > 3000) {
+      lastNotifyTime.current = now;
+      const notification = new Notification("计算器", {
+        body: "后台计算任务已完成，点击查看结果",
+        icon: "/icon-192.png",
+        silent: false
+      });
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
+    }
+  }
+
+  if ("setAppBadge" in navigator) {
+    navigator.setAppBadge(1).catch(() => {});
+  }
+  // =======================
+}, []);
 
   const handleRecall = useCallback((messageId) => {
     setRecalledMessageId(messageId);
@@ -67,11 +113,29 @@ export default function ChatPage() {
     },
   });
 
-  useEffect(() => {
+   useEffect(() => {
+    // === 新增：申请通知权限 ===
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+    // ======================
+
+    // === 新增：当用户切回应用时，清除图标小红点 ===
+    const handleFocus = () => {
+      if ("clearAppBadge" in navigator) {
+        navigator.clearAppBadge().catch(() => {});
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+    // ==========================================
+
     if (user && privateKey) {
       connect();
       loadData();
     }
+
+    // 组件卸载时移除监听
+    return () => window.removeEventListener('focus', handleFocus);
   }, [user, privateKey, connect, loadData]);
 
   const handleSelectFriend = (friend) => {

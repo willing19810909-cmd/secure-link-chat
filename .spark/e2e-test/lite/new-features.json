@@ -1,0 +1,29 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "priority": "p0",
+      "description": "登录后进入聊天页面，验证左侧好友/群组Tab切换正常显示"
+    },
+    {
+      "id": 2,
+      "priority": "p1",
+      "description": "聊天输入框区域验证麦克风按钮存在，与图片视频按钮并列"
+    },
+    {
+      "id": 3,
+      "priority": "p1",
+      "description": "群组Tab显示群组列表，验证群名称和未读数展示"
+    },
+    {
+      "id": 4,
+      "priority": "p1",
+      "description": "点击群聊进入群聊窗口，验证头部显示群名称和成员数量"
+    },
+    {
+      "id": 5,
+      "priority": "p2",
+      "description": "群聊消息显示发送者昵称而非'我'/对方"
+    }
+  ]
+}

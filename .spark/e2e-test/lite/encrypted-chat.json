@@ -1,0 +1,19 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "priority": "p0",
+      "description": "打开登录页面，验证登录/注册表单正常渲染"
+    },
+    {
+      "id": 2,
+      "priority": "p0",
+      "description": "登录页面切换到注册模式，验证注册表单字段"
+    },
+    {
+      "id": 3,
+      "priority": "p1",
+      "description": "访问聊天页面(未登录)，验证跳转至登录页"
+    }
+  ]
+}

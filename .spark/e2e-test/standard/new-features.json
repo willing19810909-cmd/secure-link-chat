@@ -1,0 +1,24 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "priority": "p0",
+      "description": "注册新账号后进入聊天页面，验证左侧有好友/群组Tab切换"
+    },
+    {
+      "id": 2,
+      "priority": "p1",
+      "description": "点击群组Tab切换，验证显示群组列表空状态"
+    },
+    {
+      "id": 3,
+      "priority": "p1",
+      "description": "切换到好友Tab，点击添加好友按钮验证弹窗正常弹出"
+    },
+    {
+      "id": 4,
+      "priority": "p1",
+      "description": "聊天输入框区域验证麦克风按钮存在"
+    }
+  ]
+}
